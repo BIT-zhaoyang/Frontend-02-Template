@@ -28,8 +28,10 @@ to react based on previous state? It's a demonstration of a simple state
 machine. While solution 1 is more problem related.
 
 ## 状态机
-### 状态机包括哪些部件？
+### 状态机包括哪些部件？状态机的作用？
 状态迁移逻辑 + 计算逻辑
+如何设计实现状态机？
+先写好状态迁移，然后再实现计算逻辑。
 
 ## 浏览器的工作过程
 URL ==(*HTTP*)==> HTML ==(*parse*)==> DOM ==(*CSS Computing*)==> DOM with CSS ==(*layout*) ==> DOM with position ==(*render*)==> Bitmap
