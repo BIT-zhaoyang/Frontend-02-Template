@@ -99,4 +99,12 @@ jsx: 把函数调用以类似HTML形式写出来的语言扩展。
 
 JSX specific knowledge:
 1. babel-loader会把jsx转译成调用React.createElement()来创建Node Element。通过配置，可以让jsx转译成调用createElement来创建Node Element。
-2. JSX只能识别小写的标签，比如<div>。若写成<Div>则识别不了，会被认为是传了一个class给createElement。要解决这个问题，我们需要先创建相应的class，然后想办法仿照dom的标准，能让document.createElement(class_type)工作。但是这个方法支持的不是很好。所以我们采用另一种方法。给这个class创建mountTo方法，让这个element挂载到DOM上，而不是让DOM来append这个element。
+2. JSX只能识别小写的标签，比如`<div>`;。若写成`<Div>`;则识别不了，会被认为是传了一个class给createElement。要解决这个问题，我们需要先创建相应的class，然后想办法仿照dom的标准，能让document.createElement(class_type)工作。但是这个方法支持的不是很好。所以我们采用另一种方法。给这个class创建mountTo方法，让这个element挂载到DOM上，而不是让DOM来append这个element。
+
+Other knowledge:
+When creating a Carousel, using `<img>` leads to some problems. Because `<img>` is draggable, users can drag the image around. A better solution is to use `<div>` element, with `background-image` CSS attribute.
+
+#### 调整CSS
+JSX成功运行以后，HTML生成就已经工作了。下面就需要进行CSS的样式调整了。\
+CSS调样式分了两部分。一部分是layout排版。另一部分是动画animation。排版涉及到overflow，box layout之类的知识。animation则和transition, transform相关。\
+那么如何进行排版呢？两个问题要解决。第一，让所有的画都出现在一行内。第二，限制容器的宽度，设置overflow，使得每次只能显示一张图片。现在排版的问题解决了，接下来解决动画问题。动画问题主要出现在循环出现了最后一张图片以后，如何柔滑的返回第一张图片？如果直接用取余的方式，体验上不是很好。那么更好的方式呢，则是找到相邻的两张图片，然后对这两张图片进行操作。
