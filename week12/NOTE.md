@@ -108,3 +108,6 @@ When creating a Carousel, using `<img>` leads to some problems. Because `<img>` 
 JSX成功运行以后，HTML生成就已经工作了。下面就需要进行CSS的样式调整了。\
 CSS调样式分了两部分。一部分是layout排版。另一部分是动画animation。排版涉及到overflow，box layout之类的知识。animation则和transition, transform相关。\
 那么如何进行排版呢？两个问题要解决。第一，让所有的画都出现在一行内。第二，限制容器的宽度，设置overflow，使得每次只能显示一张图片。现在排版的问题解决了，接下来解决动画问题。动画问题主要出现在循环出现了最后一张图片以后，如何柔滑的返回第一张图片？如果直接用取余的方式，体验上不是很好。那么更好的方式呢，则是找到相邻的两张图片，然后对这两张图片进行操作。
+
+#### JS事件绑定
+mousedown, mousemove, mouseup要成组绑定。
