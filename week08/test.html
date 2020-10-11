@@ -1,0 +1,12 @@
+<div id="a" style="height: 300px; background-color: lightblue;">
+  <div id="b" style="height: 200px; background-color: pink;"></div>
+</div>
+
+<script>
+  const a = document.getElementById("a");
+  const b = document.getElementById("b");
+  a.addEventListener('mouseover', () => console.log('hover on a, bubble'));
+  a.addEventListener('mouseover', () => console.log('hover on a, capture'), true);
+  b.addEventListener('mouseover', () => console.log('hover on b, bubble'));
+  b.addEventListener('mouseover', () => console.log('hover on b, capture'), true);
+</script>
