@@ -122,20 +122,26 @@ class Carousel extends Component {
 
       let move = event => {
         let x = event.clientX - startX;
-        for (let child of children) {
-          child.style.transition = 'none';
-          child.style.transform = `translateX(${- position * 500 + x}px)`
+
+        let current = position - ((x - x % 500) / 500);
+        console.log('myinfo: current is ', current);
+        for (let offset of [-1, 0, 1]) {
+          let imgIdx = current + offset;
+          imgIdx = (imgIdx + children.length) % children.length;
+          children[imgIdx].style.transition = 'none';
+          children[imgIdx].style.transform = `translateX(${- imgIdx * 500 + offset * 500 + x % 500}px)`
         }
       }
 
       let up = event => {
         let x = event.clientX - startX;
         position = position - Math.round(x / 500);
-        for (let child of children) {
-          child.style.transition = '';
-          child.style.transform = `translateX(${- position * 500}px)`;
+        for (let offset of [0, -Math.sign(Math.round(x / 500) - x + 250 * Math.sign(x))]) {
+          let imgIdx = position + offset;
+          imgIdx = (imgIdx + children.length) % children.length;
+          children[imgIdx].style.transition = '';
+          children[imgIdx].style.transform = `translateX(${- imgIdx * 500 + offset * 500}px)`
         }
-
         document.removeEventListener('mousemove', move);
         document.removeEventListener('mouseup', up);
       }
