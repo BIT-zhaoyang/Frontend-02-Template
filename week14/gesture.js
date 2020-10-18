@@ -38,18 +38,51 @@ element.addEventListener('touchcancel', event => {
   }
 });
 
+let startX, startY;
+let handler = null;
+let isPress = false, isPan = false, isTap = true;
+
 const start = (point) => {
-  console.log('start', point.clientX, point.clientY);
+  startX = point.clientX, startY = point.clientY;
+
+  isPress = false;
+  isPan = false;
+  isTap = true;
+  
+  handler = setTimeout(() => {
+    isPress = true;
+    isPan = false;
+    isTap = false;
+    handler = null;
+    console.log('press');
+  }, 500);
 }
 
 const move = (point) => {
-  console.log('move', point.clientX, point.clientY);
+  let dx = point.clientX - startX, dy = point.clientY - startY;
+  if (!isPan && dx * dx + dy * dy > 100) {
+    isPress = false;
+    isPan = true;
+    isTap = false;
+  }
+  if (isPan) {
+    clearTimeout(handler);
+    console.log('pan', dx, dy);
+  }
 }
 
 const end = (point) => {
-  console.log('end', point.clientX, point.clientY);
+  if (isTap) {
+    console.log('tap');
+  } else if (isPress) {
+    console.log('press end');
+  } else if (isPan) {
+    console.log('pan end');
+  }
+  clearTimeout(handler);
 }
 
 const cancel = (point) => {
+  clearTimeout(handler);
   console.log('cancel', point.clientX, point.clientY);
 }
