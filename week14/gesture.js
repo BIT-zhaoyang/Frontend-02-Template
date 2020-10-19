@@ -28,15 +28,15 @@ element.addEventListener("mousedown", event => {
     const context = contexts.get('mouse' + (1 << event.button));
     end(event, context);
     if (event.buttons === 0) {
-      element.removeEventListener('mousemove', mousemove);
-      element.removeEventListener('mouseup', mouseup);
+      document.removeEventListener('mousemove', mousemove);
+      document.removeEventListener('mouseup', mouseup);
       isListeningMouse = false;
     }
   }
 
   if (!isListeningMouse) {
-    element.addEventListener('mousemove', mousemove);
-    element.addEventListener('mouseup', mouseup);
+    document.addEventListener('mousemove', mousemove);
+    document.addEventListener('mouseup', mouseup);
     isListeningMouse = true;
   }
 });
@@ -86,6 +86,11 @@ const start = (point, context) => {
   context.isPress = false;
   context.isPan = false;
   context.isTap = true;
+  context.points = [{
+    t: Date.now(),
+    x: point.clientX,
+    y: point.clientY
+  }];
   
   context.handler = setTimeout(() => {
     context.isPress = true;
@@ -108,15 +113,45 @@ const move = (point, context) => {
     clearTimeout(context.handler);
     console.log('pan', dx, dy);
   }
+
+  context.points = context.points.filter(p => Date.now() - p.t < 500);
+  context.points.push({
+    t: Date.now(),
+    x: point.clientX,
+    y: point.clientY
+  });
 }
 
 const end = (point, context) => {
+
   if (context.isTap) {
     console.log('tap');
+    dispatch('tap', {});
   } else if (context.isPress) {
     console.log('press end');
+    dispatch('press', {});
   } else if (context.isPan) {
     console.log('pan end');
+    dispatch('panEnd', {});
+  } 
+  
+  context.points = context.points.filter(p => Date.now() - p.t < 500);
+  let d = 0, v = 0;
+  if (!context.points.length) {
+    v = 0;
+  } else {
+    d = Math.sqrt((point.clientX - context.points[0].x) ** 2 
+                  + (point.clientY - context.points[0].y) ** 2);
+    v = d / (Date.now() - context.points[0].t);
+  }
+
+  console.log(v);
+  if (v > 1.5) {
+    console.log('flick');
+    context.isFlick = true;
+    dispatch('flick', {});
+  } else {
+    context.isFlick = false;
   }
   clearTimeout(context.handler);
 }
@@ -124,4 +159,12 @@ const end = (point, context) => {
 const cancel = (point, context) => {
   clearTimeout(context.handler);
   console.log('cancel', point.clientX, point.clientY);
+}
+
+function dispatch(type, properties) {
+  let event = new Event(type);
+  for (let name in properties) {
+    event[name] = properties[name];
+  }
+  element.dispatchEvent(event);
 }
